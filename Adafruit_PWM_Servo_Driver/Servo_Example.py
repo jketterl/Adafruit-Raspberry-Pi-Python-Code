@@ -11,9 +11,6 @@ import time
 # bmp = PWM(0x40, debug=True)
 pwm = PWM(0x40, debug=True)
 
-servoMin = 150  # Min pulse length out of 4096
-servoMax = 600  # Max pulse length out of 4096
-
 def setServoPulse(channel, pulse):
   pulseLength = 1000000                   # 1,000,000 us per second
   pulseLength /= 60                       # 60 Hz
@@ -24,13 +21,50 @@ def setServoPulse(channel, pulse):
   pulse /= pulseLength
   pwm.setPWM(channel, 0, pulse)
 
-pwm.setPWMFreq(60)                        # Set frequency to 60 Hz
+pwm.setPWMFreq(600)                        # Set frequency to 60 Hz
+
+master = 1
+
+def setColor(red, green, blue):
+  #print(str(red) + ', ' + str(green) + ', ' + str(blue))
+  pwm.setPWM(1, 0, int(red * master))
+  pwm.setPWM(2, 0, int(green * master))
+  pwm.setPWM(0, 0, int(blue * master))
+
+def sleep():
+  time.sleep(.01)
+
+stepSize = 1
+
 while (True):
-  # Change speed of continuous servo on channel O
-  pwm.setPWM(0, 0, servoMin)
+  for red in range(0, 4095, stepSize):
+    setColor(red, 0, 0)
+    sleep()
+  setColor(4095, 0, 0)
   time.sleep(1)
-  pwm.setPWM(0, 0, servoMax)
+  for green in range(0, 4095, stepSize):
+    setColor(4095-green, green, 0)
+    sleep()
+  setColor(0, 4095, 0)
   time.sleep(1)
-
-
+  for blue in range(0, 4095, stepSize):
+    setColor(0, 4095-blue, blue)
+    sleep()
+  setColor(0, 0, 4095)
+  time.sleep(1)
+  for red in range(0, 4095, stepSize):
+    setColor(red, 0, 4095-red)
+    sleep()
+  setColor(4095, 0, 0)
+  time.sleep(1)
+  for white in range(0, 4095, stepSize):
+    setColor(4095, white, white)
+    sleep()
+  setColor(4095, 4095, 4095)
+  time.sleep(1)
+  for white in range(0, 4095, stepSize):
+    setColor(4095-white, 4095-white, 4095-white)
+    sleep()
+  setColor(0, 0, 0)
+  time.sleep(1)
 
