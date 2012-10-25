@@ -3,15 +3,10 @@
 from Adafruit_PWM_Servo_Driver import PWM
 import time
 
-# ===========================================================================
-# Example Code
-# ===========================================================================
-
 # Initialise the PWM device using the default address
-# bmp = PWM(0x40, debug=True)
 pwm = PWM(0x40, debug=True)
 
-pwm.setPWMFreq(600)                        # Set frequency to 60 Hz
+pwm.setPWMFreq(600)                        # Set frequency to 600 Hz
 
 master = 1
 
