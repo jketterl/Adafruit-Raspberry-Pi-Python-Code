@@ -11,40 +11,27 @@ pwm.setPWMFreq(600)                        # Set frequency to 600 Hz
 
 device = RGBDevice(pwm, 0)
 
-def sleep():
-  time.sleep(.01)
+pattern = [
+	{'red':4095},
+	{'red':0, 'green':4095},
+	{'green':0, 'blue':4095},
+	{'blue':0, 'red':4095},
+	{'green':4095},
+	{'red':0},
+	{'blue':4095},
+	{'green':0},
+	{'red':4095},
+	{'blue':0},
+	{'green':4095, 'blue':4095},
+	{'green':0},
+	{'green':4095},
+	{'blue':0},
+	{'blue':4095},
+	{'red':0},
+	{'red':0, 'green':0, 'blue':0}
+]
 
-stepSize = 1
-
-while (True):
-  for red in range(0, 4095, stepSize):
-    device.setRGB(red, 0, 0)
-    sleep()
-  device.setRGB(4095, 0, 0)
-  time.sleep(1)
-  for green in range(0, 4095, stepSize):
-    device.setRGB(4095-green, green, 0)
-    sleep()
-  device.setRGB(0, 4095, 0)
-  time.sleep(1)
-  for blue in range(0, 4095, stepSize):
-    device.setRGB(0, 4095-blue, blue)
-    sleep()
-  device.setRGB(0, 0, 4095)
-  time.sleep(1)
-  for red in range(0, 4095, stepSize):
-    device.setRGB(red, 0, 4095-red)
-    sleep()
-  device.setRGB(4095, 0, 0)
-  time.sleep(1)
-  for white in range(0, 4095, stepSize):
-    device.setRGB(4095, white, white)
-    sleep()
-  device.setRGB(4095, 4095, 4095)
-  time.sleep(1)
-  for white in range(0, 4095, stepSize):
-    device.setRGB(4095-white, 4095-white, 4095-white)
-    sleep()
-  device.setRGB(0, 0, 0)
-  time.sleep(1)
-
+while (True): 
+	for value in pattern:
+		device.fadeTo(value)
+		time.sleep(1)
