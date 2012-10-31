@@ -37,6 +37,7 @@ class Automatic(threading.Thread):
 				if not self.doStop:
 					self.device.fadeTo(value)
 					time.sleep(1)
+		self.device.setChannels({'red':0,'blue':0,'green':0})
 
 	def stop(self):
 		self.doStop = True

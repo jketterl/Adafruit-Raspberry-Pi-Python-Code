@@ -25,9 +25,12 @@ class LEDWebSocket(tornado.websocket.WebSocketHandler):
 		val = json.loads(str(message))
 		if 'auto' in val:
 			if val['auto']:
+				global automatic
+				if automatic is not None and automatic.isAlive(): return
 				automatic = Automatic(device)
 				automatic.start()
 			else:
+				if automatic is None: return
 				automatic.stop()
 			return
 		for key in val:
