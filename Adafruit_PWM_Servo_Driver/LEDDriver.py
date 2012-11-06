@@ -12,9 +12,12 @@ from Show import Automatic
 # Initialise the PWM device using the default address
 pwm = PWM(0x40, debug=True)
 
-pwm.setPWMFreq(600)                        # Set frequency to 600 Hz
+pwm.setPWMFreq(1600)                        # Set frequency to 600 Hz
 
-device = RGBDevice(pwm, 0)
+devices = [
+	RGBDevice(pwm, 0),
+	RGBDevice(pwm, 3)
+]
 
 automatic = None
 
@@ -27,7 +30,7 @@ class LEDWebSocket(tornado.websocket.WebSocketHandler):
 			if val['auto']:
 				global automatic
 				if automatic is not None and automatic.isAlive(): return
-				automatic = Automatic(device)
+				automatic = Automatic(devices)
 				automatic.start()
 			else:
 				if automatic is None: return
@@ -35,7 +38,8 @@ class LEDWebSocket(tornado.websocket.WebSocketHandler):
 			return
 		for key in val:
 			val[key] *= 40.95
-		device.setChannels(val)
+		for device in devices:
+			device.setChannels(val)
 	def on_close(self):
 		pass
 

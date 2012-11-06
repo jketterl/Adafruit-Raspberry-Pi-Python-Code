@@ -25,19 +25,23 @@ pattern = [
 
 
 class Automatic(threading.Thread):
-	def __init__(self, device):
+	def __init__(self, devices):
 		self.doStop = False
-		self.device = device
+		self.devices = devices
 		threading.Thread.__init__(self)
 
+	def setChannels(self, values):
+		for device in self.devices:
+			device.setChannels(values)
+
 	def run(self):
-		self.device.setChannels({'red':0,'blue':0,'green':0})
+		self.setChannels({'red':0,'blue':0,'green':0})
 		while not self.doStop:
 			for value in pattern:
 				if not self.doStop:
-					self.device.fadeTo(value)
+					self.devices[0].fadeTo(value)
 					time.sleep(1)
-		self.device.setChannels({'red':0,'blue':0,'green':0})
+		self.setChannels({'red':0,'blue':0,'green':0})
 
 	def stop(self):
 		self.doStop = True
